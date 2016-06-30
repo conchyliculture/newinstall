@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ $(umask) == "0077"  ]]; then
+if [[ $(umask) != "0077"  ]]; then
     echo "session optional pam_umask.so umask=0077" >> /etc/pam.d/login
     echo "Changed default umask. Please relog"
     exit 1

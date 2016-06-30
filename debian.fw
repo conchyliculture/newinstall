@@ -1,0 +1,113 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          custom firewall
+# Required-Start:    $remote_fs $syslog $network
+# Required-Stop:     $remote_fs $syslog $network
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: firewall initscript
+# Description:       Custom Firewall
+### END INIT INFO
+
+DESC="firewall"
+eth_net="eth0"
+fw_start () {
+        # on dégage les pings en broadcast
+        echo 1 > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
+
+# on flush tout !
+        iptables -F
+        iptables -X
+
+        # par defaut, on est pas sociable : on drop
+        iptables -P INPUT DROP
+        iptables -P OUTPUT DROP
+        iptables -P FORWARD DROP
+
+        # on accepte tt ce qui sort sur le net et sur le reseau local
+        iptables -P OUTPUT ACCEPT
+
+        # on accepte tout ce qui passe sur lo
+        iptables -A INPUT -i lo -j ACCEPT
+        iptables -A OUTPUT -o lo -j ACCEPT
+
+        # Chaine persi
+        iptables -N DROPnLOGIN
+        iptables -A DROPnLOGIN -j LOG --log-prefix='DROPPED INPUT: '
+        iptables -A DROPnLOGIN -j DROP
+
+        iptables -N DROPnLOGOUT
+        iptables -A DROPnLOGOUT -j LOG --log-uid  --log-prefix='DROPPED OUTPUT : ' --log-tcp-options --log-ip-options
+        iptables -A DROPnLOGOUT -j DROP
+
+        iptables -N DROPnLOGFWD
+        iptables -A DROPnLOGFWD -j LOG --log-prefix='DROPPED FORWARD: '
+        iptables -A DROPnLOGFWD -j DROP
+
+        #on accept les connexions deja etablies et on jette les invalides
+        iptables -A INPUT -i $eth_net -m state --state ESTABLISHED -j ACCEPT
+        iptables -A INPUT -i $eth_net -m state --state INVALID -j DROP
+
+        # NAT pour les LXC
+        #iptables -t nat -A POSTROUTING -o $eth_net -j MASQUERADE
+        #echo 1 > /proc/sys/net/ipv4/ip_forward
+
+        # Pour l'hote
+        # ssh
+        iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+
+        # mail
+        #iptables -A INPUT -p tcp --dport 25 -j ACCEPT
+
+        iptables -A INPUT -i $eth_net -j DROP # Pas logger les scans de l'internet
+#       iptables -A OUTPUT -j DROPnLOGOUT # DANGER
+        iptables -A INPUT -j DROPnLOGIN
+        iptables -A FORWARD -j DROPnLOGFWD
+
+        # IPv6
+        ip6tables -P INPUT DROP
+        ip6tables -P OUTPUT DROP
+        ip6tables -P FORWARD DROP
+}
+fw_stop () {
+        # on accepte tout
+        iptables -P INPUT ACCEPT
+        iptables -P OUTPUT ACCEPT
+
+        # toutes les regles sont flushées
+        iptables -F
+        iptables -t nat -F
+
+        # Et enfin, on efface toutes les chaînes qui ne
+        # sont pas à defaut dans la table filter et nat
+        iptables -X
+
+        ip6tables -P INPUT ACCEPT
+}
+
+case "$1" in
+start)
+        echo -n "Starting $DESC: $NAME"
+        fw_start
+        echo "."
+        ;;
+stop)
+        echo -n "Stopping $DESC: $NAME"
+        fw_stop
+        echo "."
+        ;;
+restart|force-reload)
+        echo -n "Restarting $DESC: $NAME"
+        fw_stop
+        sleep 1
+        fw_start
+        echo "."
+        ;;
+*)
+        echo "Usage: firewall {start|stop|restart}" >&2
+        exit 1
+        ;;
+esac
+
+exit 0
+

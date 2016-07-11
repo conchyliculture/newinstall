@@ -12,10 +12,12 @@ apt-get install bash wget vim less bash-completion htop atop iotop tcpdump strac
     cryptsetup \
     git \
     lvm2 \
+    file \
     openssl \
     openssh-client openssh-server \
     netcat-traditional \
     pv \
+    locate \
     rsync \
     rsyslog \
     sysv-rc sysvinit-core \

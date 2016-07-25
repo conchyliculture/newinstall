@@ -45,8 +45,8 @@ fw_start () {
         iptables -A DROPnLOGFWD -j DROP
 
         #on accept les connexions deja etablies et on jette les invalides
-        iptables -A INPUT -i $eth_net -m state --state ESTABLISHED -j ACCEPT
-        iptables -A INPUT -i $eth_net -m state --state INVALID -j DROP
+        iptables -A INPUT -m state --state ESTABLISHED -j ACCEPT
+        iptables -A INPUT -m state --state INVALID -j DROP
 
         # NAT pour les LXC
         #iptables -t nat -A POSTROUTING -o $eth_net -j MASQUERADE

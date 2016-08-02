@@ -21,6 +21,7 @@ apt-get install bash wget vim less bash-completion htop atop iotop tcpdump strac
     rsync \
     rsyslog \
     sysv-rc sysvinit-core \
+    ca-certificates \
     manpages
 
 echo -e "Package: systemd-sysv\nPin: release o=Debian\nPin-Priority: -1" > /etc/apt/preferences.d/no-systemd

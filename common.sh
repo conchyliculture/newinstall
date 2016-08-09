@@ -1,21 +1,24 @@
 #!/bin/bash
 
-if [[ $(umask) != "0077"  ]]; then
-    echo "session optional pam_umask.so umask=0077" >> /etc/pam.d/login
-    echo "Changed default umask. Please relog"
-    exit 1
-fi
-
 apt-get update ; apt-get dist-upgrade
 
 apt-get install bash wget vim less bash-completion htop atop iotop tcpdump strace screen ruby ncdu mc ca-certificates \
+    lshw \
+    tsocks \
+    whois \
+    lsof \
     cryptsetup \
+    ethtool \
+    dnsutils \
     git \
     lvm2 \
     file \
     openssl \
     openssh-client openssh-server \
+    p7zip-full \
+    nfs-common \
     netcat-traditional \
+    gzip \
     pv \
     locate \
     rsync \
@@ -36,4 +39,3 @@ mkdir -p /root/.vimbackup
 
 cat rc/bashrc_append >> /root/.bashrc
 
-cp rc/rsyslog.d/* /etc/rsyslog.d/

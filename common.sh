@@ -40,3 +40,4 @@ mkdir -p /root/.vimbackup
 
 cat rc/bashrc_append >> /root/.bashrc
 
+echo "blacklist pcspkr" > /etc/modprobe.d/blacklist.conf

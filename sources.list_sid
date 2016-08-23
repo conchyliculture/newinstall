@@ -1,4 +1,2 @@
 deb http://ftp.debian.org/debian/ sid main contrib non-free
 deb-src http://ftp.debian.org/debian/ sid main contrib non-free
-
-deb http://deb-multimedia.gnali.org/ sid main non-free

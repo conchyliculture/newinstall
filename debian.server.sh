@@ -20,6 +20,8 @@ cp sources.list_jessie /etc/apt/sources.list
 cp debian.fw /etc/init.d/firewall
 chmod u+x /etc/init.d/firewall
 
+cp rc/logrotate.d/* /etc/logrotate.d/
+
 cp rc/rsyslog.d/* /etc/rsyslog.d/
 service rsyslog restart
 

@@ -1,0 +1,1 @@
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ kernel:( \[ *[[:digit:]]+\.[[:digit:]]+\])? grsec: (From [0-9\.]{7,15}: )?exec of (/etc/init.d/|/lib/postfix/|/bin|/sbin|/usr/bin|/usr/sbin/|/etc/cron.daily|/usr/lib/postfix/|/etc/cron.weekly|/usr/lib/).*$

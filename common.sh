@@ -5,12 +5,16 @@ cp rc/apt.conf.d/* /etc/apt/apt.conf.d/
 apt-get update ; apt-get dist-upgrade
 
 apt-get install bash wget vim less bash-completion htop atop iotop tcpdump strace screen ruby ncdu mc ca-certificates \
+    attr \
     lshw \
     tsocks \
     whois \
     lsof \
     cryptsetup \
     ethtool \
+    manpages-dev \
+    unzip \
+    xz-utils \
     dnsutils \
     git \
     lvm2 \

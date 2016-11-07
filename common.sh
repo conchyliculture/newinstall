@@ -1,31 +1,54 @@
 #!/bin/bash
 
-apt-get update ; apt-get dist-upgrade
+if [[ $(umask) != "0077"  ]]; then
+    echo "session optional pam_umask.so umask=0077" >> /etc/pam.d/common-session
+    echo "Changed default umask. Please relog"
+    exit 1
+fi
 
-apt-get install bash wget vim less bash-completion htop atop iotop tcpdump strace screen ruby ncdu mc ca-certificates \
-    lshw \
-    tsocks \
-    whois \
-    lsof \
+apt-get update ; apt-get -y dist-upgrade
+
+apt-get -y install 
+    atop \
+    bash \
+    bash-completion \
+    ca-certificates \
     cryptsetup \
-    ethtool \
     dnsutils \
-    git \
-    lvm2 \
+    ethtool \
     file \
-    openssl \
-    openssh-client openssh-server \
-    p7zip-full \
-    nfs-common \
-    netcat-traditional \
+    firmware-linux-free \
+    git \
     gzip \
-    pv \
+    htop \
+    iotop \
+    less \
     locate \
+    lshw \
+    lsof \
+    lvm2 \
+    manpages
+    mc \
+    ncdu \
+    netcat-traditional \
+    nfs-common \
+    openssh-client openssh-server \
+    openssl \
+    p7zip-full \
+    pv \
     rsync \
     rsyslog \
+    ruby \
+    screen \
+    sqlite3 \
+    sshfs \
+    strace \
     sysv-rc sysvinit-core \
-    ca-certificates \
-    manpages
+    tcpdump \
+    tsocks \
+    vim \
+    wget \
+    whois
 
 echo -e "Package: systemd-sysv\nPin: release o=Debian\nPin-Priority: -1" > /etc/apt/preferences.d/no-systemd
 
@@ -38,6 +61,11 @@ echo "source /etc/profile.d/bash_completion.sh" >> /etc/bash.bashrc
 cp rc/vimrc /root/.vimrc
 mkdir -p /root/.vimbackup
 
-cat rc/bashrc_append >> /root/.bashrc
+for bashrc in /home/*/.bashrc; do 
+    cat rc/bashrc_append >> ${bashrc}
+done
+sed -i "s/HISTFILESIZE=1000/HISTFILESIZE=1000000000/" /etc/skel/.bashrc
+sed -i "s/HISTSIZE=1000/HISTSIZE=1000000/" /etc/skel/.bashrc
+echo "HISTTIMEFORMAT=\"%F %T \"" >> /etc/skel/.bashrc
 
-echo "blacklist pcspkr" > /etc/modprobe.d/blacklist.conf
+echo "blacklist pcspkr" > /etc/modprobe.d/blacklist-pcspkr.conf

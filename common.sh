@@ -8,7 +8,7 @@ fi
 
 apt-get update ; apt-get -y dist-upgrade
 
-apt-get -y install 
+apt-get -y install \
     atop \
     bash \
     bash-completion \
@@ -65,7 +65,7 @@ for bashrc in /home/*/.bashrc; do
     cat rc/bashrc_append >> ${bashrc}
 done
 sed -i "s/HISTFILESIZE=1000/HISTFILESIZE=1000000000/" /etc/skel/.bashrc
-sed -i "s/HISTSIZE=1000/HISTSIZE=1000000/" /etc/skel/.bashrc
+sed -i "s/HISTSIZE=2000/HISTSIZE=1000000/" /etc/skel/.bashrc
 echo "HISTTIMEFORMAT=\"%F %T \"" >> /etc/skel/.bashrc
 
 echo "blacklist pcspkr" > /etc/modprobe.d/blacklist-pcspkr.conf

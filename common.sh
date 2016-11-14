@@ -22,6 +22,7 @@ apt-get -y install \
     gzip \
     htop \
     iotop \
+    irb \
     less \
     locate \
     lshw \
@@ -64,8 +65,15 @@ mkdir -p /root/.vimbackup
 for bashrc in /home/*/.bashrc; do 
     cat rc/bashrc_append >> ${bashrc}
 done
-sed -i "s/HISTFILESIZE=1000/HISTFILESIZE=1000000000/" /etc/skel/.bashrc
-sed -i "s/HISTSIZE=2000/HISTSIZE=1000000/" /etc/skel/.bashrc
+
+for $home in /home/* ; do
+    if [[ "$home" != "lost+found" ]] ; then
+        cp rc/irbrc $home/.irbrc
+    fi
+done
+
+sed -i "s/HISTSIZE=1000/HISTFILESIZE=1000000000/" /etc/skel/.bashrc
+sed -i "s/HISTFILESIZE=2000/HISTSIZE=1000000/" /etc/skel/.bashrc
 echo "HISTTIMEFORMAT=\"%F %T \"" >> /etc/skel/.bashrc
 
 echo "blacklist pcspkr" > /etc/modprobe.d/blacklist-pcspkr.conf

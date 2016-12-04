@@ -17,7 +17,6 @@ apt-get -y install \
     ntfs-3g \
     pepperflashplugin-nonfree \
     rfkill \
-    ttf-unifont \
     vlc \
     wireless-tools \
     xfonts-100dpi \

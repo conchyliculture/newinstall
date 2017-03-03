@@ -28,7 +28,7 @@ apt-get -y install \
     lshw \
     lsof \
     lvm2 \
-    manpages
+    manpages \
     mc \
     ncdu \
     netcat-traditional \
@@ -58,6 +58,7 @@ echo "blacklist pcspkr > /etc/modprobe.d/blacklist.conf"
 echo "# J'aurais pu commenter plus haut mais ca se scripte moins bien " >> /etc/bash.bashrc
 echo "source /etc/profile.d/bash_completion.sh" >> /etc/bash.bashrc
 
+update-alternatives --config editor
 
 cp rc/vimrc /root/.vimrc
 mkdir -p /root/.vimbackup
@@ -67,13 +68,14 @@ for bashrc in /home/*/.bashrc; do
 done
 
 for $home in /home/* ; do
-    if [[ "$home" != "lost+found" ]] ; then
+    if [[ "$home" != "/home/lost+found" ]] ; then
         cp rc/irbrc $home/.irbrc
+        cp rc/bash_profile $home/.profile
     fi
 done
 
-sed -i "s/HISTSIZE=1000/HISTFILESIZE=1000000000/" /etc/skel/.bashrc
+sed -i "s/HISTSIZE=1000/HISTFILESIZE=1000000/" /etc/skel/.bashrc
 sed -i "s/HISTFILESIZE=2000/HISTSIZE=1000000/" /etc/skel/.bashrc
 echo "HISTTIMEFORMAT=\"%F %T \"" >> /etc/skel/.bashrc
-
+echo "shopt -s histappend" >> /etc/skel/.bashrc
 echo "blacklist pcspkr" > /etc/modprobe.d/blacklist-pcspkr.conf
